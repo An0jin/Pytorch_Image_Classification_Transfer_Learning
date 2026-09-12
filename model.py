@@ -7,10 +7,14 @@ class Model(nn.Module):
         self.model = timm.create_model(model_name, pretrained=True, num_classes=num_classes)
         for param in self.model.parameters():
             param.requires_grad = False
-        self.head = self.model.get_classifier()
+        self._classifier = self.model.get_classifier()
         # classification layer의 파라미터 동결 해제
-        for param in self.head.parameters():
+        for param in self._classifier.parameters():
             param.requires_grad = True
     # 오버라이딩
     def forward(self, x):
         return self.model(x)
+    # 속성으로 출력층을 반환 
+    @property
+    def classifier(self):
+        return self._classifier
