@@ -1,6 +1,6 @@
-from torch import Tensor
 import torch.nn as nn
 import timm
+from timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from torchvision.transforms import Normalize
 
 class Model(nn.Module):
@@ -10,9 +10,7 @@ class Model(nn.Module):
         self.model.requires_grad_(False)
         self._classifier = self.model.get_classifier()
         self._classifier.requires_grad_(True)
-        
-        cfg = timm.get_pretrained_cfg(model_name)
-        self.norm = Normalize(mean=cfg.mean, std=cfg.std)
+        self.norm = Normalize(mean=IMAGENET_DEFAULT_MEAN, std=IMAGENET_DEFAULT_STD)
 
     def forward(self, x):
         return self.model(self.norm(x))
